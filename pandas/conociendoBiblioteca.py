@@ -56,3 +56,43 @@ grafico_5_primeros = valor_mas_alto.head(5);
 grafico_5_primeros.plot(kind="bar", figsize=(15, 11), color="blue");
 plt.savefig("5_colonias");
 plt.close();
+
+
+
+# Este archivo es el mismo que se utilizó para resolver los desafíos de la lección 1 y contiene datos de estudiantes de un curso superior.
+# Basándonos en esto, resolvamos los problemas propuestos a continuación utilizando los conocimientos adquiridos hasta ahora.
+
+# Verifica si la base de datos contiene datos nulos y, en caso de tenerlos, realiza el tratamiento de estos datos nulos de la manera que consideres más coherente con la situación.
+
+nulos = datos.isnull().sum();
+print(nulos);
+
+datos['Nota'] = datos['Nota'].fillna(0);
+print(datos.isnull().sum());
+
+# Los estudiantes "Alicia" y "Carlos" ya no forman parte del grupo. Por lo tanto, elimínalos de la base de datos.
+
+query = datos.query("Nombre=='Carlos' | Nombre == 'Alicia'").index;
+
+copia_datos = datos.drop(query, axis=0);
+
+print(copia_datos)
+
+# Aplica un filtro que seleccione solo a los estudiantes que fueron aprobados.
+
+datos.loc[datos["Aprobado"] == 'Verdadero', "Aprobado"] = 'True';
+datos["Aprobado"] = datos["Aprobado"]
+
+datos_aprobados = datos[datos['Aprobado'] == 'True'];
+print(datos_aprobados)
+
+
+# Extra: Al revisar las calificaciones de los estudiantes aprobados, notamos que algunas calificaciones eran incorrectas. Las estudiantes que obtuvieron una calificación de 7.0, en realidad tenían un punto extra que no se contabilizó. Por lo tanto, reemplaza las calificaciones de 7.0 en la base de datos por 8.0. Consejo: busca el método replace.
+
+datos.loc[datos["Nota"] >= 7, "Nota"] += 1;
+datos.loc[datos["Nota"] > 10, "Nota"] = 10;
+print(datos[datos["Aprobado"] == 'True']);
+
+# Guarda el DataFrame que contiene solo a los estudiantes aprobados en un archivo CSV llamado "alumnos_aprobados.csv".
+
+datos.to_csv('alumnos_aprobados.csv', index=False);
