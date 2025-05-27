@@ -96,3 +96,28 @@ print(datos[datos["Aprobado"] == 'True']);
 # Guarda el DataFrame que contiene solo a los estudiantes aprobados en un archivo CSV llamado "alumnos_aprobados.csv".
 
 datos.to_csv('alumnos_aprobados.csv', index=False);
+
+# Los estudiantes participaron en una actividad extracurricular y ganaron puntos extras. Estos puntos extras corresponden al 40% de su nota actual. Por lo tanto, crea una columna llamada "Puntos_extras" que contenga los puntos extras de cada estudiante, es decir, el 40% de su nota actual.
+
+datos["Puntos_extra"] = datos["Nota"] * 0.4;
+
+
+# Crea otra columna llamada "Notas_finales" que contenga las notas de cada estudiante sumadas con los puntos extras.
+
+datos["Notas_finales"] = datos["Nota"] + datos["Puntos_extra"];
+datos.loc[datos["Notas_finales"] > 10, "Notas_finales"] = 10;
+
+
+# Dado que hubo una puntuación extra, algunos estudiantes que no habían sido aprobados antes pueden haber sido aprobados ahora. En función de esto, crea una columna llamada "Aprobado_final" con los siguientes valores:
+# True: si el estudiante está aprobado (la nota final debe ser mayor o igual a 7.0).
+# False: si el estudiante está reprobado (la nota final debe ser menor que 7.0).
+
+datos.loc[datos["Notas_finales"] >= 7, "Aprobado_final"] = 'True';
+datos.loc[datos["Notas_finales"] < 7, "Aprobado_final"] = 'False';
+
+print(datos);
+
+# Realiza una selección y verifica qué estudiantes no habían sido aprobados anteriormente, pero ahora fueron aprobados después de sumar los puntos extras.
+
+
+print(datos[datos["Aprobado_final"] == 'True']);
